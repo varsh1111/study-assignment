@@ -59,7 +59,7 @@ function Dashboard() {
           <div className="grid size-10 place-items-center rounded-xl bg-secondary text-secondary-foreground"><CalendarDays className="size-5" /></div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Today</p>
-            <p className="font-semibold">{new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(today)}</p>
+            <p className="font-semibold">{new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(today).replace(/^(\w+),?\s/, "$1, ")}</p>
           </div>
         </div>
         <div className="mt-6 max-w-md">
