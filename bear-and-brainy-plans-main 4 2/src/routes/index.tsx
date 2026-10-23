@@ -50,8 +50,8 @@ function Dashboard() {
   ];
 
   return (
-    <div className="space-y-8">
-      <section className="bg-hero rounded-3xl p-8 text-foreground shadow-soft">
+    <div className="mx-auto w-full max-w-7xl space-y-6 md:space-y-8">
+      <section className="bg-hero rounded-3xl border border-border/50 p-5 text-foreground shadow-soft sm:p-7 md:p-8">
         <h1 className="text-3xl font-bold md:text-4xl">Your study universe ✨</h1>
         <p className="mt-2 text-muted-foreground">Small steps count. Let’s see your progress.</p>
         <div className="mt-5 inline-flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 shadow-sm">
@@ -73,7 +73,7 @@ function Dashboard() {
           <SessionDialog />
         </div>
         <StudyStats />
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 xl:grid-cols-2">
           <Card className="space-y-3 p-5 shadow-soft">
             <div className="flex items-center gap-2"><Clock className="size-5 text-primary" /><h3 className="font-semibold">Weekly study goal</h3></div>
             <GoalBar label="Study hours" actual={weekSummary(sessions).hours} target={goals.weeklyHours} />
@@ -92,17 +92,17 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {stats.map((s) => (
-          <Card key={s.label} className="flex flex-row items-center gap-4 p-5 shadow-soft">
+          <Card key={s.label} className="flex flex-row items-center gap-3 rounded-2xl p-4 shadow-sm md:gap-4 md:p-5">
             <div className="grid size-11 place-items-center rounded-xl bg-secondary text-secondary-foreground"><s.icon className="size-5" /></div>
             <div><p className="font-display text-2xl font-bold">{s.value}</p><p className="text-sm text-muted-foreground">{s.label}</p></div>
           </Card>
         ))}
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-5">
-        <section className="space-y-4 lg:col-span-3">
+      <div className="grid items-start gap-6 xl:grid-cols-5 xl:gap-8">
+        <section className="min-w-0 space-y-4 xl:col-span-3">
           <h2 className="text-xl font-bold">Upcoming deadlines</h2>
           <AddAssignmentForm />
           <div className="space-y-2">
@@ -111,12 +111,13 @@ function Dashboard() {
           </div>
         </section>
 
-        <section className="space-y-4 lg:col-span-2">
+        <section className="min-w-0 space-y-4 xl:col-span-2">
           <div className="flex items-center justify-between">
             <div><h2 className="text-xl font-bold">Study hours by subject</h2><p className="mt-1 text-sm text-muted-foreground">See this week’s hours and your total time for each subject.</p><Link to="/progress" className="text-sm text-primary hover:underline">See study statistics →</Link></div>
             <AddSubjectDialog><Button size="sm" variant="outline"><Plus />Subject</Button></AddSubjectDialog>
           </div>
           <div className="space-y-3">
+            {subjects.length === 0 && <div className="rounded-2xl border border-dashed p-6 text-center"><p className="font-semibold">Your subjects will live here</p><p className="mt-1 text-sm text-muted-foreground">Add a subject to start tracking your study hours.</p></div>}
             {subjects.map((s) => {
               const list = assignments.filter((a) => a.subjectId === s.id);
               const p = progressOf(list);
@@ -126,10 +127,10 @@ function Dashboard() {
               const weeklyShare = goals.weeklyHours > 0 ? Math.min(100, (subjectWeekHours / targetShare) * 100) : 0;
 
               return (
-                <Link key={s.id} to="/subjects/$id" params={{ id: s.id }} className="block rounded-xl border bg-card p-4 transition hover:shadow-soft">
+                <Link key={s.id} to="/subjects/$id" params={{ id: s.id }} className="block rounded-2xl border border-border/70 bg-card p-4 transition-colors hover:border-primary/40 hover:shadow-soft">
                   <div className="mb-2 flex items-center gap-2">
                     <span className="text-lg">{s.emoji}</span>
-                    <span className="font-semibold">{s.name}</span>
+                    <span className="font-bold tracking-tight">{s.name}</span>
                     <span className="ml-auto text-sm text-muted-foreground">{list.filter((a) => a.done).length}/{list.length}</span>
                   </div>
                   <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">

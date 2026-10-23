@@ -57,7 +57,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>My subjects</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-semibold tracking-wide">My subjects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {subjects.map((s) => {
@@ -67,7 +67,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild isActive={path === `/subjects/${s.id}`} tooltip={s.name}>
                       <Link to="/subjects/$id" params={{ id: s.id }}>
                         <span className="grid size-4 place-items-center text-sm">{s.emoji}</span>
-                        <span className="truncate">{s.name}</span>
+                        <span className="truncate font-semibold">{s.name}</span>
                         <span className="ml-auto size-2 shrink-0 rounded-full" style={{ background: subjectColor(s.color) }} />
                       </Link>
                     </SidebarMenuButton>

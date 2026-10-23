@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Target } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Target, Flame, Clock3, CalendarDays, Trophy } from 'lucide-react';
 import { format, parseISO, startOfMonth, endOfMonth, getDay, addMonths } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,8 +59,15 @@ export function StudyCalendar() {
 }
 export function StudyStats() {
   const { sessions } = usePlanner();
-  const week = weekSummary(sessions); const streak = streaks(sessions);
-  return <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[{ label: 'Hours this week', value: hoursLabel(week.hours), tone: 'bg-secondary' }, { label: 'Study days this week', value: week.days, tone: 'bg-chart-3/20' }, { label: 'Current streak', value: `${streak.current} days`, tone: 'bg-chart-2/20' }, { label: 'Longest streak', value: `${streak.longest} days`, tone: 'bg-chart-4/20' }].map(s => <div key={s.label} className={`rounded-lg border p-5 ${s.tone}`}><p className="font-display text-2xl font-bold">{s.value}</p><p className="mt-1 text-sm text-muted-foreground">{s.label}</p></div>)}</div>;
+  const week = weekSummary(sessions);
+  const streak = streaks(sessions);
+  const stats = [
+    { label: 'Hours this week', value: hoursLabel(week.hours), icon: Clock3, tone: 'bg-secondary/70' },
+    { label: 'Study days this week', value: week.days, icon: CalendarDays, tone: 'bg-chart-3/15' },
+    { label: 'Current streak', value: `${streak.current} days`, icon: Flame, tone: 'bg-orange-100/80 text-orange-950 dark:bg-orange-950/30 dark:text-orange-100' },
+    { label: 'Longest streak', value: `${streak.longest} days`, icon: Trophy, tone: 'bg-chart-4/15' },
+  ];
+  return <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">{stats.map(({ label, value, icon: Icon, tone }) => <div key={label} className={`flex min-h-28 items-center gap-3 rounded-2xl border border-border/70 p-4 shadow-sm md:p-5 ${tone}`}><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-background/80"><Icon className={`size-5 ${label === 'Current streak' ? 'text-orange-600 dark:text-orange-300' : 'text-primary'}`} /></div><div className="min-w-0"><p className="font-display text-xl font-bold leading-tight md:text-2xl">{value}</p><p className="mt-1 text-xs leading-snug text-muted-foreground md:text-sm">{label}</p></div></div>)}</div>;
 }
 export function DailyChart({ sessions, start }: { sessions: StudySession[]; start: string }) {
   const values = Array.from({ length: 7 }, (_, i) => { const date = shiftDate(start, i); return { date, total: hours(sessions.filter(s => s.date === date)) }; });
