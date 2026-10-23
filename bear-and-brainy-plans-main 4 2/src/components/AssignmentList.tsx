@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePlanner, dueLabel, daysUntil, subjectColor, type Assignment } from "@/lib/planner";
+import { SubjectIcon } from "@/components/SubjectIcon";
 import { dateKey } from "@/lib/study";
 
 export function AssignmentRow({ a, showSubject }: { a: Assignment; showSubject?: boolean }) {
@@ -58,7 +59,7 @@ export function AddAssignmentForm({ subjectId }: { subjectId?: string }) {
         <Select value={validSid} onValueChange={setSid}>
           <SelectTrigger className="w-40"><SelectValue placeholder="Subject" /></SelectTrigger>
           <SelectContent>
-            {subjects.map((s) => <SelectItem key={s.id} value={s.id}>{s.emoji} {s.name}</SelectItem>)}
+            {subjects.map((s) => <SelectItem key={s.id} value={s.id}><SubjectIcon name={s.name} icon={s.emoji} className="inline-grid size-6 align-middle" /> {s.name}</SelectItem>)}
           </SelectContent>
         </Select>
       )}

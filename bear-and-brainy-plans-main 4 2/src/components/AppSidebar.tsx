@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import { usePlanner, subjectColor, progressOf } from "@/lib/planner";
 import { AddSubjectDialog } from "./AddSubjectDialog";
+import { SubjectIcon } from "./SubjectIcon";
 
 export function AppSidebar() {
   const { subjects, assignments } = usePlanner();
@@ -66,7 +67,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={s.id}>
                     <SidebarMenuButton asChild isActive={path === `/subjects/${s.id}`} tooltip={s.name}>
                       <Link to="/subjects/$id" params={{ id: s.id }}>
-                        <span className="grid size-4 place-items-center text-sm">{s.emoji}</span>
+                        <SubjectIcon name={s.name} icon={s.emoji} className="size-7 rounded-lg" />
                         <span className="truncate font-semibold">{s.name}</span>
                         <span className="ml-auto size-2 shrink-0 rounded-full" style={{ background: subjectColor(s.color) }} />
                       </Link>

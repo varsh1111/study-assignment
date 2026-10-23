@@ -9,11 +9,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { usePlanner } from '@/lib/planner';
+import { SubjectIcon } from '@/components/SubjectIcon';
 import { dateKey, goalPercent, hours, hoursLabel, shiftDate, studyDays, weekSummary, streaks, type StudySession } from '@/lib/study';
 
 export function SubjectSelect({ value, onChange, id }: { value: string; onChange: (v: string) => void; id?: string }) {
   const { subjects } = usePlanner();
-  return <Select value={value} onValueChange={onChange}><SelectTrigger id={id} className="w-full"><SelectValue placeholder="Select subject" /></SelectTrigger><SelectContent>{subjects.map(s => <SelectItem key={s.id} value={s.id}>{s.emoji} {s.name}</SelectItem>)}</SelectContent></Select>;
+  return <Select value={value} onValueChange={onChange}><SelectTrigger id={id} className="w-full"><SelectValue placeholder="Select subject" /></SelectTrigger><SelectContent>{subjects.map(s => <SelectItem key={s.id} value={s.id}><SubjectIcon name={s.name} icon={s.emoji} className="inline-grid size-6 align-middle" /> {s.name}</SelectItem>)}</SelectContent></Select>;
 }
 export function SessionDialog({ session, subjectId }: { session?: StudySession; subjectId?: string }) {
   const { subjects, saveSession } = usePlanner();

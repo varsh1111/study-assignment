@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePlanner, progressOf, subjectColor } from "@/lib/planner";
+import { SubjectIcon } from "@/components/SubjectIcon";
 import { AssignmentRow, AddAssignmentForm } from "@/components/AssignmentList";
 import { SubjectStudyProgress, SessionDialog, SessionList } from "@/components/StudyWidgets";
 
@@ -30,7 +31,7 @@ function SubjectPage() {
   return (
     <div className="space-y-8">
       <section className="flex flex-wrap items-center gap-6 rounded-3xl border bg-card p-8 shadow-soft">
-        <div className="grid size-20 place-items-center rounded-2xl text-4xl" style={{ background: `color-mix(in oklab, ${subjectColor(s.color)} 20%, transparent)` }}>{s.emoji}</div>
+        <div className="grid size-20 place-items-center rounded-2xl" style={{ background: `color-mix(in oklab, ${subjectColor(s.color)} 20%, transparent)` }}><SubjectIcon name={s.name} icon={s.emoji} className="size-14 rounded-xl" /></div>
         <div className="flex-1">
           <h1 className="text-3xl font-bold">{s.name}</h1>
           <p className="text-muted-foreground">{list.filter((a) => a.done).length} of {list.length} tasks done</p>

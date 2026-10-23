@@ -9,6 +9,7 @@ import { AssignmentRow, AddAssignmentForm } from "@/components/AssignmentList";
 import { AddSubjectDialog } from "@/components/AddSubjectDialog";
 import { StudyStats, SessionDialog, GoalBar } from "@/components/StudyWidgets";
 import { hours, hoursLabel, dateKey, weekSummary } from "@/lib/study";
+import { SubjectIcon } from "@/components/SubjectIcon";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -129,7 +130,7 @@ function Dashboard() {
               return (
                 <Link key={s.id} to="/subjects/$id" params={{ id: s.id }} className="block rounded-2xl border border-border/70 bg-card p-4 transition-colors hover:border-primary/40 hover:shadow-soft">
                   <div className="mb-2 flex items-center gap-2">
-                    <span className="text-lg">{s.emoji}</span>
+                    <SubjectIcon name={s.name} icon={s.emoji} className="size-9 rounded-xl" />
                     <span className="font-bold tracking-tight">{s.name}</span>
                     <span className="ml-auto text-sm text-muted-foreground">{list.filter((a) => a.done).length}/{list.length}</span>
                   </div>

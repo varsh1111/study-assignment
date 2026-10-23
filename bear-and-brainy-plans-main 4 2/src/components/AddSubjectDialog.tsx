@@ -5,21 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePlanner } from "@/lib/planner";
-
-const EMOJIS = ["📘", "📐", "🧬", "📚", "🧪", "🌍", "🎨", "🎵", "💻", "🏛️", "⚽", "🗣️"];
+import { SubjectIconPicker } from "@/components/SubjectIcon";
 
 export function AddSubjectDialog({ children }: { children: ReactNode }) {
   const { addSubject } = usePlanner();
   const nav = useNavigate();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [emoji, setEmoji] = useState("📘");
+  const [emoji, setEmoji] = useState("book");
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     const s = addSubject(name.trim(), emoji);
-    setName(""); setEmoji("📘"); setOpen(false);
+    setName(""); setEmoji("book"); setOpen(false);
     nav({ to: "/subjects/$id", params: { id: s.id } });
   };
 
@@ -35,14 +34,7 @@ export function AddSubjectDialog({ children }: { children: ReactNode }) {
           </div>
           <div className="space-y-2">
             <Label>Pick an icon</Label>
-            <div className="flex flex-wrap gap-2">
-              {EMOJIS.map((em) => (
-                <button type="button" key={em} onClick={() => setEmoji(em)}
-                  className={`grid size-10 place-items-center rounded-lg border text-xl transition ${emoji === em ? "border-primary bg-secondary" : "hover:bg-muted"}`}>
-                  {em}
-                </button>
-              ))}
-            </div>
+            <SubjectIconPicker value={emoji} onChange={setEmoji} />
           </div>
           <DialogFooter><Button type="submit" disabled={!name.trim()}>Add subject</Button></DialogFooter>
         </form>
