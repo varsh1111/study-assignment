@@ -10,6 +10,8 @@ export const topicStatuses: { value: TopicStatus; label: string }[] = [
   { value: 'practice', label: 'Needs more practice' }, { value: 'confident', label: 'Feeling confident' },
 ];
 export const dateKey = (date = new Date()) => format(date, 'yyyy-MM-dd');
+/** Calendar-day countdown for date-only values, avoiding timezone/DST millisecond errors. */
+export const daysUntilDate = (date: string, today = dateKey()) => differenceInCalendarDays(parseISO(date), parseISO(today));
 export const shiftDate = (date: string, days: number) => dateKey(addDays(parseISO(date), days));
 export const weekStart = (date = dateKey()) => dateKey(startOfWeek(parseISO(date), { weekStartsOn: 1 }));
 export const hours = (sessions: StudySession[]) => sessions.reduce((n, s) => n + s.minutes, 0) / 60;

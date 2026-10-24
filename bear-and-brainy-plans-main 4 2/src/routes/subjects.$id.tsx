@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
+import { BookOpenText, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePlanner, progressOf, subjectColor } from "@/lib/planner";
 import { SubjectIcon } from "@/components/SubjectIcon";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/subjects/$id")({
 
 function SubjectPage() {
   const { id } = Route.useParams();
-  const { subjects, assignments, removeSubject } = usePlanner();
+  const { subjects, assignments, removeSubject, updateSubject } = usePlanner();
   const nav = useNavigate();
   const s = subjects.find((x) => x.id === id);
   if (!s) return <p className="text-muted-foreground">Subject not found. <Link to="/" className="underline">Back to dashboard</Link></p>;
@@ -49,6 +49,25 @@ function SubjectPage() {
         </div>
         <SubjectStudyProgress subjectId={id} />
         <div className="border-t pt-4"><h3 className="mb-3 font-semibold">Study sessions</h3><SessionList subjectId={id} /></div>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border bg-card p-5 shadow-soft">
+        <div className="flex items-center gap-3">
+          <div className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary"><BookOpenText className="size-5" /></div>
+          <div>
+            <h2 className="text-xl font-bold">Subject notepad</h2>
+            <p className="text-sm text-muted-foreground">Keep reminders, useful links and things to remember for {s.name}.</p>
+          </div>
+        </div>
+        <textarea
+          aria-label={`${s.name} subject notes`}
+          value={s.notes ?? ""}
+          onChange={(event) => updateSubject(id, { notes: event.target.value })}
+          placeholder={`Write anything you want to remember about ${s.name}...`}
+          rows={6}
+          className="w-full resize-y rounded-xl border border-input bg-background px-3 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <p className="text-xs text-muted-foreground">Your notes save automatically in this browser.</p>
       </section>
 
       <section className="space-y-4">

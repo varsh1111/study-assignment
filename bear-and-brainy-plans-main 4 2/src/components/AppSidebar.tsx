@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import logo from "@/assets/logo.png";
-import { LayoutDashboard, Trophy, Plus, Clock3, ChartNoAxesCombined, GraduationCap } from "lucide-react";
+import { LayoutDashboard, Plus, Clock3, ChartNoAxesCombined, GraduationCap } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, useSidebar,
@@ -47,11 +47,6 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={path === "/exams"} tooltip="Exam Tracker">
                   <Link to="/exams"><GraduationCap /><span>Exam Tracker</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={path === "/achievements"} tooltip="Achievements">
-                  <Link to="/achievements"><Trophy /><span>Achievements</span></Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

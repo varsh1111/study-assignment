@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { BookOpen, CheckCircle2, Clock, Trophy, Plus, CalendarDays } from "lucide-react";
+import { BookOpen, CheckCircle2, Clock, Plus, CalendarDays } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { usePlanner, progressOf, subjectColor, daysUntil, getAchievements } from "@/lib/planner";
+import { usePlanner, progressOf, subjectColor, daysUntil } from "@/lib/planner";
 import { AssignmentRow, AddAssignmentForm } from "@/components/AssignmentList";
 import { AddSubjectDialog } from "@/components/AddSubjectDialog";
 import { StudyStats, SessionDialog, GoalBar } from "@/components/StudyWidgets";
-import { hours, hoursLabel, dateKey, weekSummary } from "@/lib/study";
+import { hours, hoursLabel, dateKey, daysUntilDate, weekSummary } from "@/lib/study";
 import { SubjectIcon } from "@/components/SubjectIcon";
 
 export const Route = createFileRoute("/")({
@@ -40,14 +40,13 @@ function Dashboard() {
   const overall = progressOf(assignments);
   const pending = assignments.filter((a) => !a.done).sort((a, b) => a.due.localeCompare(b.due));
   const soon = pending.filter((a) => daysUntil(a.due) <= 2);
-  const unlocked = getAchievements(planner).filter((a) => a.unlocked).length;
   const week = weekSummary(sessions);
 
   const stats = [
     { icon: BookOpen, label: "Subjects", value: subjects.length },
     { icon: CheckCircle2, label: "Completed", value: assignments.filter((a) => a.done).length },
     { icon: Clock, label: "To do", value: pending.length },
-    { icon: Trophy, label: "Badges", value: unlocked },
+    { icon: BookOpen, label: "Study sessions", value: sessions.length },
   ];
 
   return (
@@ -82,12 +81,23 @@ function Dashboard() {
           </Card>
           <Card className="space-y-3 p-5 shadow-soft">
             <div className="flex items-center gap-2"><CalendarDays className="size-5 text-primary" /><h3 className="font-semibold">Coming up</h3></div>
-            {exams.filter(e => e.date >= dateKey()).sort((a,b) => a.date.localeCompare(b.date)).slice(0,2).map(e => {
+            {exams.filter(e => e.date >= dateKey(today)).sort((a,b) => a.date.localeCompare(b.date)).slice(0,3).map(e => {
               const subject = subjects.find(s => s.id === e.subjectId);
-              const days = Math.round((new Date(`${e.date}T00:00:00`).getTime() - new Date(`${dateKey()}T00:00:00`).getTime()) / 86400000);
-              return <div key={e.id} className="flex items-center justify-between gap-3 rounded-lg bg-muted/60 p-3"><div><p className="font-medium">{e.title}</p><p className="text-xs text-muted-foreground">{subject ? subject.name : 'General'} • {days === 0 ? 'Today' : `${days} day${days === 1 ? '' : 's'} away`}</p></div><span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">{e.date}</span></div>;
+              const days = daysUntilDate(e.date, dateKey(today));
+              return <div key={e.id} className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/40 p-3">
+                <div className="grid size-14 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <span className="text-xl font-bold leading-none">{days}</span>
+                  <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide">{days === 1 ? 'day' : 'days'}</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold">{e.title}</p>
+                  <p className="text-xs text-muted-foreground">{subject ? subject.name : 'General'}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${e.date}T12:00:00`))}</p>
+                </div>
+                {days === 0 && <span className="rounded-full bg-accent/30 px-2 py-1 text-xs font-semibold">Today</span>}
+              </div>;
             })}
-            {!exams.some(e => e.date >= dateKey()) && <p className="text-sm text-muted-foreground">No exams added yet. Add an exam to make a revision plan.</p>}
+            {!exams.some(e => e.date >= dateKey(today)) && <p className="text-sm text-muted-foreground">No exams added yet. Add an exam to make a revision plan.</p>}
             <Link to="/exams" className="inline-flex text-sm font-semibold text-primary hover:underline">Open exam tracker →</Link>
           </Card>
         </div>
@@ -101,6 +111,7 @@ function Dashboard() {
           </Card>
         ))}
       </section>
+
 
       <div className="grid items-start gap-6 xl:grid-cols-5 xl:gap-8">
         <section className="min-w-0 space-y-4 xl:col-span-3">
