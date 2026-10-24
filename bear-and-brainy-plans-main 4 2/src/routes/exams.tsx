@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SubjectIcon } from "@/components/SubjectIcon";
 import { usePlanner } from "@/lib/planner";
-import { dateKey, daysUntilDate, topicStatuses, type Exam, type TopicStatus } from "@/lib/study";
+import { dateKey, topicStatuses, type Exam, type TopicStatus } from "@/lib/study";
 import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/exams")({
@@ -57,7 +57,7 @@ function ExamTracker() {
     <div className="grid gap-5 lg:grid-cols-2">{sorted.map(exam => {
       const subject = subjects.find(s => s.id === exam.subjectId);
       const remaining = Math.max(0, exam.topics.length - exam.topics.filter(t => t.status === "confident").length);
-      const days = daysUntilDate(exam.date);
+      const days = Math.round((new Date(`${exam.date}T00:00:00`).getTime() - new Date(`${dateKey()}T00:00:00`).getTime()) / 86400000);
       return <Card key={exam.id} className="space-y-5 p-5 shadow-soft">
         <div className="flex items-start gap-3"><div className="grid size-12 shrink-0 place-items-center rounded-xl bg-secondary text-2xl">{subject ? <SubjectIcon name={subject.name} icon={subject.emoji} className="size-9" /> : <SubjectIcon name="Other" className="size-9" />}</div><div className="min-w-0 flex-1"><h2 className="font-display text-xl font-bold">{exam.title}</h2><p className="text-sm text-muted-foreground">{subject?.name} · {format(parseISO(exam.date), "d MMM yyyy")}</p></div><ExamDialog exam={exam} /><Button variant="ghost" size="icon" aria-label="Delete exam" onClick={() => { if (confirm(`Delete ${exam.title}?`)) removeExam(exam.id); }}><Trash2 className="size-4" /></Button></div>
         <div className="flex items-center gap-3 rounded-xl bg-muted/60 p-3"><CalendarDays className="size-5 text-primary" /><div><p className="font-semibold">{days === 0 ? "Your exam is today" : days < 0 ? "Exam date has passed" : `${days} days to go`}</p><p className="text-xs text-muted-foreground">{exam.topics.length} topics · {remaining} still to review</p></div></div>

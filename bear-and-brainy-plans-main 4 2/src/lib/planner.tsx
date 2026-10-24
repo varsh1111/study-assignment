@@ -1,7 +1,7 @@
 import { dateKey, type StudySession, type StudyGoals, type Exam, type TopicStatus } from "./study";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type Subject = { id: string; name: string; emoji: string; color: number; targetHours?: number; notes?: string };
+export type Subject = { id: string; name: string; emoji: string; color: number; targetHours?: number };
 export type Assignment = {
   id: string;
   subjectId: string;
@@ -140,4 +140,26 @@ export function dueLabel(due: string) {
   if (d === 0) return "Due today";
   if (d === 1) return "Due tomorrow";
   return `Due in ${d} days`;
+}
+
+export type Achievement = { id: string; emoji: string; title: string; desc: string; unlocked: boolean; progress: string };
+
+export function getAchievements(s: State): Achievement[] {
+  const done = s.assignments.filter((a) => a.done).length;
+  const fullSubjects = s.subjects.filter((sub) => {
+    const list = s.assignments.filter((a) => a.subjectId === sub.id);
+    return list.length > 0 && list.every((a) => a.done);
+  }).length;
+  const mk = (id: string, emoji: string, title: string, desc: string, cur: number, goal: number) => ({
+    id, emoji, title, desc, unlocked: cur >= goal, progress: `${Math.min(cur, goal)}/${goal}`,
+  });
+  return [
+    mk("first", "🌱", "First Step", "Complete your first assignment", done, 1),
+    mk("five", "🔥", "On a Roll", "Complete 5 assignments", done, 5),
+    mk("ten", "🚀", "Unstoppable", "Complete 10 assignments", done, 10),
+    mk("twentyfive", "🏆", "Study Champion", "Complete 25 assignments", done, 25),
+    mk("organized", "🗂️", "Organized", "Add 5 subjects", s.subjects.length, 5),
+    mk("master", "⭐", "Subject Master", "Finish every task in a subject", fullSubjects, 1),
+    mk("allstar", "🌟", "All-Star", "Finish every task in 3 subjects", fullSubjects, 3),
+  ];
 }
